@@ -1,7 +1,12 @@
+#pragma once
 
-#include<vector>
+#include <vector>
 
 namespace hive {
+
+// Adjacent directions, ordered in a circle.
+const std::vector<std::pair<int, int>> kAdajcentDirections = {
+    {1, 0}, {1, -1}, {0, -1}, {-1, 0}, {-1, 1}, {0, 1}};
 
 // Position of a piece on the board.
 /* Graph demonstration: (x, y)
@@ -12,33 +17,27 @@ namespace hive {
  *        (0, -1) (1, -1)
  *       y-
  */
-
 struct Pos {
-    int x = 0;
-    int y = 0;
-    int z = 0; // layer, only for beetle
-    // TODO: define equality
+  int x = 0;
+  int y = 0;
+  int z = 0;  // layer, only for beetle
+
+  Pos(int xx, int yy, int zz);
+
+  bool operator==(const Pos& other) const;
+  bool operator!=(const Pos& other) const { return !operator==(other); }
+
+  // Return ajacent positions to Given position. z axis would be preserved.
+  std::vector<Pos> GetAdjacentPositions() const;
 };
 
-// Those directions are ordered in a circle.
-const std::vector<std::pair<int,int>> kAdajcentDirections = {
-    {1, 0},
-    {1, -1},
-    {0, -1},
-    {-1, 0},
-    {-1, 1},
-    {0, 1}
+}  // namespace hive
+
+namespace std {
+// To be used a unordered map key.
+template <>
+struct hash<hive::Pos> {
+  size_t operator()(const hive::Pos& pos) const;
 };
 
-// Return ajacent positions to Given position. z axis would be preserved.
-std::vector<Pos> GetAdjacentPositions(const Pos& pos) {
-    std::vector<Pos> positions;
-    positions.reserve(6);
-    for(const auto& direction : kAdajcentDirections) {
-        positions.push_back({.x=pos.x+direction[0], .y=pos.y+direction[1], .z=pos.z})
-    }
-    return positions;
-}
-
-
-};
+}  // namespace std

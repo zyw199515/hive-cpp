@@ -33,3 +33,6 @@
 
 # Bazel files
 bazel-*
+
+# vscode
+.vscode/*
