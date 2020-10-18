@@ -1,0 +1,6 @@
+
+namespace hive {
+
+class 
+
+}

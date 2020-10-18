@@ -1,2 +1,3 @@
 # hive-cpp
-A cpp implementation of Hive
+A cpp implementation of Hive, compiled with bazel.
+
