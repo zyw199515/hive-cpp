@@ -221,7 +221,7 @@ std::vector<Move> GetPillbugMovePositions(const HiveState& state, const Pos& fro
   std::vector<Pos> empty_positions;
   std::vector<Pos> ground_level_positions;
   for (const auto& pos : from.GetAdjacentPositions()) {
-    if (state.IsEmpty(from)) {
+    if (state.IsEmpty(pos)) {
       empty_positions.push_back(pos);
     } else if (pos.z == 0) {
       ground_level_positions.push_back(pos);
@@ -230,14 +230,15 @@ std::vector<Move> GetPillbugMovePositions(const HiveState& state, const Pos& fro
   if (empty_positions.empty() || ground_level_positions.empty()) {  // early stop
     return moves;
   }
+  Pos over(from.x, from.y, 1);
   for (const auto& move_from : ground_level_positions) {
     if (state.IsImmobile(move_from) || !IsHiveStillConnected(state, move_from) ||
-        IsPieceMoveValid(state, move_from, from)) {
+        !IsPieceMoveValid(state, move_from, over)) {
       // In those cases, the piece cannot be moved.
       continue;
     }
     for (const auto& to : empty_positions) {
-      if (!IsPieceMoveValid(state, from, to)) {
+      if (!IsPieceMoveValid(state, over, to)) {
         continue;
       }
       moves.push_back({.from = move_from, .to = to, .immobile_next_turn = true});

@@ -231,3 +231,52 @@ TEST(MovesTest, Ladybug) {
                                             Move(from, Pos(1, 1)), Move(from, Pos(2, 0)),
                                             Move(from, Pos(2, -1)), Move(from, Pos(2, -2))));
 }
+
+TEST(MovesTest, Mosquito) {
+  /* Case from ruling
+   * +-----+
+   * |   q |
+   * |s B Q|
+   * | M   |
+   * +-----+
+   */
+
+  HiveState state;
+  state.pieces[Pos(0, 0)] = Piece(PieceType::kBeetle, Side::kWhite);
+  state.pieces[Pos(0, -1)] = Piece(PieceType::kMosquito, Side::kWhite);
+  state.pieces[Pos(-1, 0)] = Piece(PieceType::kSpider, Side::kBlack);
+  state.pieces[Pos(1, 0)] = Piece(PieceType::kQueen, Side::kWhite);
+  state.pieces[Pos(0, 1)] = Piece(PieceType::kQueen, Side::kBlack);
+  Pos from(0, -1);
+
+  ASSERT_THAT(GetMovePositions(state, Pos(0, -1)),
+              testing::UnorderedElementsAre(Move(from, Pos(0, 0, 1)), Move(from, Pos(1, -1)),
+                                            Move(from, Pos(-1, -1)), Move(from, Pos(-2, 1)),
+                                            Move(from, Pos(-1, 0, 1)), Move(from, Pos(2, 0))));
+}
+
+TEST(MovesTest, Pillbug) {
+  /* Case from ruling
+   * +------+
+   * |   a a|
+   * |a a P |
+   * |   a  |
+   * +------+
+   */
+  HiveState state;
+  state.pieces[Pos(0, 0)] = Piece(PieceType::kPillbug, Side::kWhite);
+  state.pieces[Pos(0, 1)] = Piece(PieceType::kAnt, Side::kBlack);
+  state.pieces[Pos(-1, 1)] = Piece(PieceType::kAnt, Side::kBlack);
+  state.pieces[Pos(-1, 0)] = Piece(PieceType::kAnt, Side::kBlack);
+  state.pieces[Pos(0, -1)] = Piece(PieceType::kAnt, Side::kBlack);
+  state.pieces[Pos(-2, 0)] = Piece(PieceType::kAnt, Side::kBlack);
+  Pos from(0, 0);
+  ASSERT_THAT(GetMovePositions(state, Pos(0, 0)),
+              testing::UnorderedElementsAre(
+                  Move(from, Pos(1, 0)), Move(from, Pos(1, -1)), Move(Pos(0, 1), Pos(1, 0), true),
+                  Move(Pos(0, 1), Pos(1, -1), true), Move(Pos(-1, 1), Pos(1, 0), true),
+                  Move(Pos(-1, 1), Pos(1, -1), true), Move(Pos(0, -1), Pos(1, 0), true),
+                  Move(Pos(0, -1), Pos(1, -1), true)));
+
+  // TODO: also check for corner case.
+}

@@ -27,9 +27,9 @@ struct VisualBoardLimit {
 };
 
 const std::unordered_map<PieceType, char> kPieceTypeName = {
-    {PieceType::kQueen, 'q'},    {PieceType::kBeetle, 'b'}, {PieceType::kGrasshopper, 'g'},
-    {PieceType::kSpider, 's'},   {PieceType::kAnt, 'a'},    {PieceType::kLadybug, 'l'},
-    {PieceType::kMosquito, 'q'}, {PieceType::kQueen, 'q'},
+    {PieceType::kQueen, 'q'},    {PieceType::kBeetle, 'b'},  {PieceType::kGrasshopper, 'g'},
+    {PieceType::kSpider, 's'},   {PieceType::kAnt, 'a'},     {PieceType::kLadybug, 'l'},
+    {PieceType::kMosquito, 'm'}, {PieceType::kPillbug, 'p'},
 };
 
 class HiveState : public State {
