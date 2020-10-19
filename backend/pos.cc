@@ -11,11 +11,21 @@ bool Pos::operator==(const Pos& other) const {
   return other.x == x && other.y == y && other.z == z;
 }
 
+std::string Pos::DebugString() const {
+  std::string debug = "(";
+  debug += std::to_string(x) + "," + std::to_string(y);
+  if (z != 0) {
+    debug += "," + std::to_string(z);
+  }
+  debug += ")";
+  return debug;
+}
+
 std::vector<Pos> Pos::GetAdjacentPositions() const {
   std::vector<Pos> positions;
   positions.reserve(6);
-  for (const auto& direction : kAdajcentDirections) {
-    positions.push_back({x + direction.first, y + direction.second, z});
+  for (const auto& direction : kAdjacentDirections) {
+    positions.push_back({x + direction.first, y + direction.second});
   }
   return positions;
 }

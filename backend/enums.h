@@ -3,11 +3,20 @@
 namespace hive {
 
 enum class Side {
-  kBlack = 0,
-  kWhite = 1,
+  kUndefined = 0,
+  kBlack = 1,
+  kWhite = 2,
+};
+
+enum class Action {
+  kUndefined = 0,
+  kPlace,
+  kMove,
+  kPass,
 };
 
 enum class PieceType {
+  kUndefined = 0,
   kQueen,
   kBeetle,
   kGrasshopper,
