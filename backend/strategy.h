@@ -1,6 +1,6 @@
 
 namespace hive {
 
-class 
+class HiveExpansionStrategy : ExpansionStrategy<HiveState, HiveAction> {};
 
-}
+}  // namespace hive
