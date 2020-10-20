@@ -8,6 +8,15 @@
 using namespace hive;
 
 // Test samples are constructed according to official ruling book examples.
+TEST(StateTest, GetPlacePieceTypes) {
+  HiveState state;
+  state.active_player = Side::kBlack;
+  state.black_piece_count = {{PieceType::kAnt, 1}, {PieceType::kBeetle, 0}, {PieceType::kQueen, 1}};
+  EXPECT_THAT(state.GetPlacePieceTypes(),
+              testing::UnorderedElementsAre(PieceType::kAnt, PieceType::kQueen));
+  state.black_queen_turn_countdown = 0;
+  EXPECT_THAT(state.GetPlacePieceTypes(), testing::UnorderedElementsAre(PieceType::kQueen));
+}
 
 TEST(StateTest, GetPlacePositions) {
   // Initial state must start from (0, 0)

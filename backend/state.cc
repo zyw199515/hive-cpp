@@ -31,6 +31,30 @@ void DrawEnclosures(std::vector<std::vector<char>>& buffer) {
 
 }  // namespace
 
+void HiveState::Initialize(const InitOption& option) {
+  pieces.clear();
+  black_queen_turn_countdown = 4;
+  white_queen_turn_countdown = 4;
+  last_moved_piece = boost::none;
+  immobile_piece = boost::none;
+  active_player = Side::kBlack;
+  black_piece_count = {{PieceType::kQueen, 1},
+                       {PieceType::kSpider, 2},
+                       {PieceType::kBeetle, 2},
+                       {PieceType::kGrasshopper, 3},
+                       {PieceType::kAnt, 3}};
+  if (option.ladybug) {
+    black_piece_count[PieceType::kLadybug] = 1;
+  }
+  if (option.mosquito) {
+    black_piece_count[PieceType::kMosquito] = 1;
+  }
+  if (option.pillbug) {
+    black_piece_count[PieceType::kPillbug] = 1;
+  }
+  white_piece_count = black_piece_count;
+}
+
 void HiveState::print(std::ostream& strm) { strm << DebugString(); }
 
 bool HiveState::IsEmpty(const Pos& pos) const { return pieces.count(pos) == 0; }
@@ -60,6 +84,38 @@ std::vector<Pos> HiveState::GetNeighbours(const Pos& pos) const {
     }
   }
   return neighbours;
+}
+
+std::vector<PieceType> HiveState::GetPlacePieceTypes() const {
+  std::vector<PieceType> result;
+  CHECK(active_player != Side::kUndefined);
+  if (active_player == Side::kBlack) {
+    std::vector<PieceType> available_piece_types;
+    if (EnforceQueenPlacement()) {
+      CHECK(black_piece_count.at(PieceType::kQueen) == 1);
+      return {PieceType::kQueen};
+    } else {
+      for (const auto& pair : black_piece_count) {
+        if (pair.second > 0) {
+          result.push_back(pair.first);
+        }
+      }
+      return result;
+    }
+  } else {
+    std::vector<PieceType> available_piece_types;
+    if (EnforceQueenPlacement()) {
+      CHECK(white_piece_count.at(PieceType::kQueen) == 1);
+      return {PieceType::kQueen};
+    } else {
+      for (const auto& pair : white_piece_count) {
+        if (pair.second > 0) {
+          result.push_back(pair.first);
+        }
+      }
+      return result;
+    }
+  }
 }
 
 std::vector<Pos> HiveState::GetPlacePositions() const {
@@ -146,13 +202,45 @@ std::string HiveState::DebugString() const {
     visual_pos.second -= limit.y_min - 1;
     output_buffer.at(visual_pos.second).at(visual_pos.first) = piece_name;
   }
+
   std::string debug_string = "board:\n";
   for (const auto& line : output_buffer) {
     debug_string += std::string(line.begin(), line.end());
     debug_string += "\n";
   }
 
-  // TODO: add other states.
+  if (active_player == Side::kBlack) {
+    debug_string += "turn: B\n";
+  } else if (active_player == Side::kWhite) {
+    debug_string += "turn: W\n";
+  }
+
+  debug_string += "pieces:";
+  for (const auto& pair : black_piece_count) {
+    if (pair.second > 0) {
+      debug_string += kPieceTypeName.at(pair.first) + std::to_string(pair.second);
+    }
+  }
+  debug_string += " ";
+  for (const auto& pair : white_piece_count) {
+    if (pair.second > 0) {
+      debug_string += static_cast<char>(std::toupper(kPieceTypeName.at(pair.first))) +
+                      std::to_string(pair.second);
+    }
+  }
+  debug_string += "\n";
+  if (last_moved_piece) {
+    debug_string += "last move:" + last_moved_piece->DebugString() + "\n";
+  }
+  if (immobile_piece) {
+    debug_string += "immobile:" + immobile_piece->DebugString() + "\n";
+  }
+  if (black_queen_turn_countdown >= 0) {
+    debug_string += "q place:" + std::to_string(black_queen_turn_countdown) + "\n";
+  }
+  if (white_queen_turn_countdown >= 0) {
+    debug_string += "Q place:" + std::to_string(white_queen_turn_countdown) + "\n";
+  }
   return debug_string;
 }
 

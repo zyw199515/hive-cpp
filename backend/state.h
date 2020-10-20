@@ -26,16 +26,18 @@ struct VisualBoardLimit {
   int y_max;
 };
 
-const std::unordered_map<PieceType, char> kPieceTypeName = {
-    {PieceType::kQueen, 'q'},    {PieceType::kBeetle, 'b'},  {PieceType::kGrasshopper, 'g'},
-    {PieceType::kSpider, 's'},   {PieceType::kAnt, 'a'},     {PieceType::kLadybug, 'l'},
-    {PieceType::kMosquito, 'm'}, {PieceType::kPillbug, 'p'},
+struct InitOption {
+  bool mosquito = false;
+  bool ladybug = false;
+  bool pillbug = false;
 };
 
 class HiveState : public State {
  public:
   HiveState() = default;
   ~HiveState() override = default;
+
+  void Initialize(const InitOption &option);
 
   void print(std::ostream &strm) override;
 
@@ -51,6 +53,8 @@ class HiveState : public State {
   // Get Non-empty positions that are neighbour to given position.
   std::vector<Pos> GetNeighbours(const Pos &pos) const;
 
+  //
+  std::vector<PieceType> GetPlacePieceTypes() const;
   // Get the empty position that can be placed for the active player.
   std::vector<Pos> GetPlacePositions() const;
 
@@ -64,7 +68,7 @@ class HiveState : public State {
   std::unordered_map<Pos, Piece> pieces;
 
   // To enforce queen bee placing.
-  // Starts from 4, and become 0 indicating
+  // Starts from 4, and become 0 indicating queen must be placed.
   int black_queen_turn_countdown = 4;
   int white_queen_turn_countdown = 4;
 
@@ -75,10 +79,11 @@ class HiveState : public State {
   boost::optional<Pos> immobile_piece;
 
   // The player that would take action.
-  Side active_player;
+  Side active_player = Side::kUndefined;
 
   // spare pieces not placed.
-  std::unordered_map<PieceType, int> spare_piece_count;
+  std::unordered_map<PieceType, int> black_piece_count;
+  std::unordered_map<PieceType, int> white_piece_count;
 
  protected:
   std::pair<int, int> GetVisualPos(const Pos &pos) const;
