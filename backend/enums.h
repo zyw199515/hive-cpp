@@ -8,7 +8,7 @@ enum class Side {
   kWhite = 2,
 };
 
-enum class Action {
+enum class ActionType {
   kUndefined = 0,
   kPlace,
   kMove,
@@ -25,6 +25,12 @@ enum class PieceType {
   kLadybug,
   kMosquito,
   kPillbug,
+};
+
+const std::unordered_map<PieceType, char> kPieceTypeName = {
+    {PieceType::kQueen, 'q'},    {PieceType::kBeetle, 'b'},  {PieceType::kGrasshopper, 'g'},
+    {PieceType::kSpider, 's'},   {PieceType::kAnt, 'a'},     {PieceType::kLadybug, 'l'},
+    {PieceType::kMosquito, 'm'}, {PieceType::kPillbug, 'p'},
 };
 
 struct EnumClassHash {
