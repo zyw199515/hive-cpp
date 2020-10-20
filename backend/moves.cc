@@ -85,6 +85,21 @@ std::vector<Move> GetMoveByType(HiveState& state, const Pos& from, PieceType pie
   }
 }
 
+std::vector<Move> GetMovePositions(HiveState& state) {
+  std::vector<Move> moves;
+  if (!state.EnforceQueenPlacement()) {
+    for (const auto& pair : state.pieces) {
+      if (pair.second.side != state.active_player) {
+        continue;
+      }
+      const Pos& from = pair.first;
+      std::vector<Move> move_by_piece = GetMovePositions(state, from);
+      moves.insert(moves.end(), move_by_piece.begin(), move_by_piece.end());
+    }
+  }
+  return moves;
+}
+
 std::vector<Move> GetMovePositions(HiveState& state, const Pos& from) {
   CHECK(!state.IsEmpty(from));
   if (state.IsStacked(from) || state.IsImmobile(from) || !IsHiveStillConnected(state, from)) {

@@ -32,6 +32,9 @@ struct Move {
   };
 };
 
+// Get available moves from current state
+std::vector<Move> GetMoveActions(HiveState& state);
+
 // Given a State, and a piece by position, return the moves available.
 // For performance consideration, state could be mutated for multiple-step movements,
 // the function must guarantee that state is unchanged.
