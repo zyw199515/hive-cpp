@@ -86,62 +86,6 @@ std::vector<Pos> HiveState::GetNeighbours(const Pos& pos) const {
   return neighbours;
 }
 
-std::vector<PieceType> HiveState::GetPlacePieceTypes() const {
-  std::vector<PieceType> result;
-  CHECK(active_player != Side::kUndefined);
-  if (active_player == Side::kBlack) {
-    std::vector<PieceType> available_piece_types;
-    if (EnforceQueenPlacement()) {
-      CHECK(black_piece_count.at(PieceType::kQueen) == 1);
-      return {PieceType::kQueen};
-    } else {
-      for (const auto& pair : black_piece_count) {
-        if (pair.second > 0) {
-          result.push_back(pair.first);
-        }
-      }
-      return result;
-    }
-  } else {
-    std::vector<PieceType> available_piece_types;
-    if (EnforceQueenPlacement()) {
-      CHECK(white_piece_count.at(PieceType::kQueen) == 1);
-      return {PieceType::kQueen};
-    } else {
-      for (const auto& pair : white_piece_count) {
-        if (pair.second > 0) {
-          result.push_back(pair.first);
-        }
-      }
-      return result;
-    }
-  }
-}
-
-std::vector<Pos> HiveState::GetPlacePositions() const {
-  // Special case for empty board.
-  if (pieces.size() == 0) {
-    return {Pos(0, 0)};
-  }
-  // Special case for second move.
-  if (pieces.size() == 1) {
-    return Pos(0, 0).GetAdjacentPositions();
-  }
-  // General case
-  std::unordered_set<Pos> positions;
-  for (const auto& pair : pieces) {
-    if (pair.second.side == active_player) {
-      for (const auto& pos : pair.first.GetAdjacentPositions()) {
-        if (positions.find(pos) == positions.end() && IsEmpty(pos) &&
-            !HasOpponentNeighbour(pos, active_player)) {
-          positions.insert(pos);
-        }
-      }
-    }
-  }
-  return std::vector<Pos>(positions.begin(), positions.end());
-}
-
 bool HiveState::AllowMovement() const {
   CHECK(active_player != Side::kUndefined);
   if (active_player == Side::kBlack) {

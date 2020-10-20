@@ -53,11 +53,6 @@ class HiveState : public State {
   // Get Non-empty positions that are neighbour to given position.
   std::vector<Pos> GetNeighbours(const Pos &pos) const;
 
-  //
-  std::vector<PieceType> GetPlacePieceTypes() const;
-  // Get the empty position that can be placed for the active player.
-  std::vector<Pos> GetPlacePositions() const;
-
   // If movement is allow (i.e. queen is placed)
   bool AllowMovement() const;
 
