@@ -43,11 +43,20 @@ cc_library(
     ]
 )
 
-cc_test(
-    name="state_test",
-    srcs=["state_test.cc"],
+cc_library(
+    name="place",
+    srcs=["place.cc"],
+    hdrs=["place.h"],
     deps=[
-        ":state",
+        ":state"
+    ]
+)
+
+cc_test(
+    name="place_test",
+    srcs=["place_test.cc"],
+    deps=[
+        ":place",
         ":test_deps"
     ]
 )
@@ -68,6 +77,26 @@ cc_test(
     srcs=["moves_test.cc"],
     deps=[
         ":moves",
+        ":test_deps"
+    ]
+)
+
+cc_library(
+    name="action",
+    srcs=["action.cc"],
+    hdrs=["action.h"],
+    deps=[
+        ":moves",
+        ":place",
+        ":state",
+    ]
+)
+
+cc_library(
+    name="action_test",
+    srcs=["action_test.cc"],
+    deps=[
+        ":action",
         ":test_deps"
     ]
 )
