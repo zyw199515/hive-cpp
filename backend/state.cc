@@ -86,6 +86,24 @@ std::vector<Pos> HiveState::GetPlacePositions() const {
   return std::vector<Pos>(positions.begin(), positions.end());
 }
 
+bool HiveState::AllowMovement() const {
+  CHECK(active_player != Side::kUndefined);
+  if (active_player == Side::kBlack) {
+    return black_queen_turn_countdown == -1;
+  } else {
+    return white_queen_turn_countdown == -1;
+  }
+}
+
+bool HiveState::EnforceQueenPlacement() const {
+  CHECK(active_player != Side::kUndefined);
+  if (active_player == Side::kBlack) {
+    return black_queen_turn_countdown == 0;
+  } else {
+    return white_queen_turn_countdown == 0;
+  }
+}
+
 std::pair<int, int> HiveState::GetVisualPos(const Pos& pos) const {
   return std::make_pair(2 * pos.x + pos.y, -pos.y);
 }

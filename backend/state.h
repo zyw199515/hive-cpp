@@ -54,10 +54,17 @@ class HiveState : public State {
   // Get the empty position that can be placed for the active player.
   std::vector<Pos> GetPlacePositions() const;
 
+  // If movement is allow (i.e. queen is placed)
+  bool AllowMovement() const;
+
+  // If this turn a queen must be placed.
+  bool EnforceQueenPlacement() const;
+
   // pieces on the board.
   std::unordered_map<Pos, Piece> pieces;
 
   // To enforce queen bee placing.
+  // Starts from 4, and become 0 indicating
   int black_queen_turn_countdown = 4;
   int white_queen_turn_countdown = 4;
 

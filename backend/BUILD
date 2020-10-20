@@ -43,6 +43,15 @@ cc_library(
     ]
 )
 
+cc_test(
+    name="state_test",
+    srcs=["state_test.cc"],
+    deps=[
+        ":state",
+        ":test_deps"
+    ]
+)
+
 cc_library(
     name="moves",
     srcs=["moves.cc"],
